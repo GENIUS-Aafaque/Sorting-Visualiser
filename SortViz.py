@@ -54,54 +54,51 @@ def show_turtle():
 # Generating Lines
 def generate_lines():
     global d, a, l
-    for i in range(100):
-        line_turtle = turtle.Turtle()
-        line_turtle.hideturtle()
-        line_turtle.shape("square")
-        line_turtle.color("cyan")
+    for _ in range(100):
+        line = turtle.Turtle()
+        line.hideturtle()
+        line.shape("square")
+        line.color("cyan")
         alen = random.uniform(0.1, 28)
-        line_turtle.shapesize(stretch_len=alen, stretch_wid=0.2)
+        line.shapesize(stretch_len=alen, stretch_wid=0.2)
         l.append(alen)
-        line_turtle.speed(0)
-        line_turtle.left(90)
-        line_turtle.penup()
+        line.speed(0)
+        line.left(90)
+        line.penup()
         res_len_sel = 300 - (alen * 10)
-        line_turtle.goto((-400 + d), -res_len_sel)
-        line_turtle.showturtle()
-        a.append(line_turtle)
+        line.goto((-400 + d), -res_len_sel)
+        line.showturtle()
+        a.append(line)
         d += 8
     d = 8
     wn.update()
 
 # Selection Sort
 def sel_sort():
-    for i in range(100):
+    for i in range(len(l)):
         a[i].color("#FF1100")
         var = a[i].xcor()
         length = l[i]
         pos = i
 
-        res_len_sel = res_len_strd = 300 - (l[i] * 10)
-
         for j in range(i + 1, 100):
             if l[j] < length:
                 length = l[j]
                 var = a[j].xcor()
-                res_len_strd = 300 - (l[j] * 10)
                 pos = j
             a[j].color("cyan")
 
         a[pos].color("green")
-        a[pos].goto(a[i].xcor(), -res_len_strd)
-        a[i].goto(var, -res_len_sel)
+        a[pos].setx(a[i].xcor())
+        a[i].setx(var)
         a[i], a[pos] = a[pos], a[i]
         l[i], l[pos] = l[pos], l[i]
         wn.update()
 
 # Bubble Sort
 def bub_sort():
-    for i in range(99):
-        for j in range(99 - i):
+    for i in range(len(l) - 1):
+        for j in range(len(l) - 1 - i):
             var = a[j].xcor()
             vara = a[j + 1].xcor()
             if l[j] > l[j + 1]:
@@ -109,18 +106,36 @@ def bub_sort():
                 a[j + 1].setx(var)
                 a[j], a[j + 1] = a[j + 1], a[j]
                 l[j], l[j + 1] = l[j + 1], l[j]
-            a[j].color("cyan")
+                a[j].color("cyan")
             a[j + 1].color("green")
         wn.update()
     a[0].color("green")
     wn.update()
 
+# Insertion Sort
+def ins_sort():
+    for i in range(len(l)):
+
+        j = i
+        a[j].color("red")
+        while j > 0 and l[j - 1] > l[j]:
+            xcor = a[j - 1].xcor()
+            a[j - 1].setx(a[j].xcor())
+            a[j].setx(xcor)
+
+            l[j - 1], l[j] = l[j], l[j - 1]
+            a[j - 1], a[j] = a[j], a[j - 1]
+
+            j -= 1
+        wn.update()
+        a[j].color("Green")
+
 # Clearing Screen
 def clear_screen():
     global a, l
-    for line_turtle in a:
-        line_turtle.clear()
-        line_turtle.hideturtle()
+    for line in a:
+        line.clear()
+        line.hideturtle()
     del a[:]
     del l[:]
     generate_lines()
@@ -152,7 +167,7 @@ def function_button():
     generate_buttons(-300, 300, 0, "Create New Lines")
     generate_buttons(-100, 300, 1, "Selection Sort")
     generate_buttons(100, 300, 2, "Bubble Sort")
-    generate_buttons(300, 300, 3, "Clear Screen")
+    generate_buttons(300, 300, 3, "Insertion Sort")
 
 # Time Taken
 def write_timeTaken(t):
@@ -186,11 +201,17 @@ def checki(x, y):
         show_turtle()
     elif x > 220 and x < 380 and y > 280 and y < 320:
         hide_turtle()
-        clear_screen()
+        t1 = time.time()
+        ins_sort()
+        t2 = time.time()
+        write_timeTaken(t2 - t1)
         show_turtle()
 
 # Screen
 display_vis()
+
+# Creating Lines
+generate_lines()
 
 # Generating Buttons
 function_button()
