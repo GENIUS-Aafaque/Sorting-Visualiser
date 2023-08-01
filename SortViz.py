@@ -114,21 +114,24 @@ def bub_sort():
 
 # Insertion Sort
 def ins_sort():
-    for i in range(len(l)):
-
-        j = i
-        a[j].color("red")
-        while j > 0 and l[j - 1] > l[j]:
-            xcor = a[j - 1].xcor()
-            a[j - 1].setx(a[j].xcor())
-            a[j].setx(xcor)
-
-            l[j - 1], l[j] = l[j], l[j - 1]
-            a[j - 1], a[j] = a[j], a[j - 1]
-
+    a[0].color("green")
+    xcors = [t.xcor() for t in a]
+    for i in range(1, len(l)):
+        key = l[i]
+        key_turtle = a[i]
+        key_turtle.color("red")
+        j = i - 1
+        while j >= 0 and key < l[j]:
+            a[j].setx(xcors[j + 1])
+            a[j + 1] = a[j]
+            l[j + 1] = l[j]
             j -= 1
+        key_turtle.setx(xcors[j + 1])
+        a[j + 1] = key_turtle
+        l[j + 1] = key
         wn.update()
-        a[j].color("Green")
+        a[j + 1].color("green")
+    wn.update()
 
 # Clearing Screen
 def clear_screen():
